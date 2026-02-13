@@ -21,7 +21,7 @@ All code, comments, variable names, commit messages, UI text, and documentation 
 | Layer      | Technology                  | Notes                                                    |
 | ---------- | --------------------------- | -------------------------------------------------------- |
 | Runtime    | **Bun**                     | Not Node.js, npm, pnpm, or vite                         |
-| Backend    | **Elysia**                  | Bun-native web framework; serves API + frontend          |
+| Backend    | **Bun.serve()**             | Native Bun HTTP server; serves API routes + frontend      |
 | Frontend   | **React**                   | To be migrated from current vanilla JS; served by Bun    |
 | Testing    | **bun test**                | Not jest, vitest, or mocha                               |
 | Language   | **TypeScript** (strict)     | All source files must be `.ts` or `.tsx`                 |
@@ -144,7 +144,12 @@ Where:
 ```
 salary-calculator/
 ├── src/
-│   ├── server.ts                    # Elysia server, API routes, HTML import serving
+│   ├── server.ts                    # Bun.serve() entry point, imports routes
+│   ├── routes/
+│   │   ├── index.ts                 # Barrel: exports apiRoutes object
+│   │   ├── calculate.ts             # POST /api/calculate handler
+│   │   ├── exchange-rate.ts         # GET /api/exchange-rate handler
+│   │   └── health.ts               # GET /api/health handler
 │   ├── calculations/
 │   │   ├── salary.ts                # USD-COP conversion, net salary computation
 │   │   ├── taxes.ts                 # Colombian tax model (health, pension, FSP, withholding)
@@ -155,6 +160,7 @@ salary-calculator/
 │   │   └── favorite-expenses.ts     # Preset favorite expenses
 │   ├── services/
 │   │   ├── exchange-rate.ts         # USD/COP rate fetcher with caching
+│   │   ├── salary-calculator.ts     # Orchestrates salary, tax, and expense calculations
 │   │   └── __tests__/               # Service tests
 │   ├── types/
 │   │   └── index.ts                 # Shared TypeScript types and interfaces

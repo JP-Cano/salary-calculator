@@ -1,6 +1,6 @@
 # 💰 Calculadora de Salario Colombia
 
-Una calculadora de salario moderna y hermosa para Colombia, construida con TypeScript, Bun y Elysia.
+Una calculadora de salario moderna y hermosa para Colombia, construida con TypeScript, Bun y React.
 
 ## ✨ Características
 
@@ -9,7 +9,7 @@ Una calculadora de salario moderna y hermosa para Colombia, construida con TypeS
 - 🌟 **Gastos Favoritos** - Tus gastos habituales guardados para acceso rápido
 - 📊 **Visualización gráfica** de la distribución del salario
 - 🎨 **UI moderna y accesible** con modo oscuro automático
-- ⚡ **Súper rápido** gracias a Bun y Elysia
+- ⚡ **Súper rápido** gracias a Bun
 
 ## 🚀 Instalación
 
@@ -50,15 +50,23 @@ La aplicación estará disponible en: **http://localhost:3000**
 ```
 salary-calculator/
 ├── src/
-│   ├── server.ts           # Servidor Elysia con API endpoints
-│   └── calculations/       # Lógica de cálculos
-│       ├── salary.ts       # Cálculo de salario
-│       ├── taxes.ts        # Cálculo de impuestos
-│       └── expenses.ts     # Gestión de gastos
-├── public/                 # Frontend
-│   ├── index.html         # UI principal
-│   ├── styles.css         # Estilos hermosos
-│   └── app.js            # Lógica del cliente
+│   ├── server.ts              # Bun.serve() con rutas API y frontend
+│   ├── routes/                # Handlers HTTP
+│   │   ├── index.ts           # Barrel de rutas API
+│   │   ├── calculate.ts       # POST /api/calculate
+│   │   ├── exchange-rate.ts   # GET /api/exchange-rate
+│   │   └── health.ts          # GET /api/health
+│   ├── services/              # Lógica de negocio y servicios externos
+│   │   ├── salary-calculator.ts  # Orquesta cálculo de salario
+│   │   └── exchange-rate.ts      # Tasa de cambio USD/COP
+│   ├── calculations/          # Dominio de cálculos
+│   │   ├── salary.ts          # Cálculo de salario
+│   │   ├── taxes.ts           # Cálculo de impuestos
+│   │   └── expenses.ts        # Gestión de gastos
+│   └── frontend/              # React UI
+│       ├── index.html         # Entry HTML
+│       ├── App.tsx            # Root component
+│       └── components/        # Componentes React
 └── package.json
 ```
 
