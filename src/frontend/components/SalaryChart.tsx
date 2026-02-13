@@ -5,17 +5,18 @@ import { useTranslation } from "../i18n/index.ts";
 
 type SalaryChartProps = {
     percentages: SalaryPercentages;
-    grossCop: number;
+    totalIncomeCop: number;
     taxesCop: number;
     expensesCop: number;
+    nonSalaryIncomeCop: number;
     netCop: number;
 };
 
-export function SalaryChart({ percentages, grossCop, taxesCop, expensesCop, netCop }: SalaryChartProps) {
+export function SalaryChart({ percentages, totalIncomeCop, taxesCop, expensesCop, nonSalaryIncomeCop, netCop }: SalaryChartProps) {
     const { t } = useTranslation();
 
     type BarData = {
-        labelKey: "chart.taxes" | "chart.expenses" | "chart.net";
+        labelKey: "chart.taxes" | "chart.expenses" | "chart.non_salary" | "chart.net";
         percent: number;
         copValue: number;
         className: string;
@@ -24,8 +25,19 @@ export function SalaryChart({ percentages, grossCop, taxesCop, expensesCop, netC
     const bars: BarData[] = [
         { labelKey: "chart.taxes", percent: percentages.taxes, copValue: taxesCop, className: "taxes-bar" },
         { labelKey: "chart.expenses", percent: percentages.expenses, copValue: expensesCop, className: "expenses-bar" },
-        { labelKey: "chart.net", percent: percentages.remaining, copValue: netCop, className: "net-bar" },
     ];
+
+    // Only show non-salary income bar when there is non-salary income
+    if (nonSalaryIncomeCop > 0) {
+        bars.push({
+            labelKey: "chart.non_salary",
+            percent: percentages.nonSalaryIncome,
+            copValue: nonSalaryIncomeCop,
+            className: "non-salary-bar",
+        });
+    }
+
+    bars.push({ labelKey: "chart.net", percent: percentages.remaining, copValue: netCop, className: "net-bar" });
 
     // Normalize so the tallest bar fills 100% of the chart height
     const maxPercent = Math.max(...bars.map((b) => b.percent));
@@ -35,7 +47,7 @@ export function SalaryChart({ percentages, grossCop, taxesCop, expensesCop, netC
         <div className="chart-container">
             <h3>{t("chart.title")}</h3>
             <div className="chart-gross-label">
-                {t("chart.gross")}: {formatCOP(grossCop)}
+                {t("chart.gross")}: {formatCOP(totalIncomeCop)}
             </div>
             <div className="chart-bars">
                 {bars.map((bar) => {

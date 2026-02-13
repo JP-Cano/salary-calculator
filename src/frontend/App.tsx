@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { createRoot } from "react-dom/client";
-import type { Expense, Currency } from "../types/index.ts";
+import type { Expense, NonSalaryIncome, Currency } from "../types/index.ts";
 import { SalaryInput } from "./components/SalaryInput.tsx";
+import { NonSalaryIncomeManager } from "./components/NonSalaryIncomeManager.tsx";
 import { ExpenseManager } from "./components/ExpenseManager.tsx";
 import { ResultsPanel } from "./components/ResultsPanel.tsx";
 import { Notification, type NotificationType } from "./components/Notification.tsx";
@@ -51,6 +52,7 @@ function App() {
     const [currency, setCurrency] = useState<Currency>("COP");
     const [dollarRate, setDollarRate] = useState(0);
     const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [nonSalaryIncome, setNonSalaryIncome] = useState<NonSalaryIncome[]>([]);
     const [toasts, setToasts] = useState<Toast[]>([]);
 
     const { rate, loading: rateLoading, error: rateError, source: rateSource } = useExchangeRate();
@@ -88,11 +90,11 @@ function App() {
         if (salary <= 0) return;
 
         if (currency === "COP") {
-            calculate({ salary, currency, dollarRate: 0, expenses });
+            calculate({ salary, currency, dollarRate: 0, expenses, nonSalaryIncome });
         } else if (dollarRate > 0) {
-            calculate({ salary, currency, dollarRate, expenses });
+            calculate({ salary, currency, dollarRate, expenses, nonSalaryIncome });
         }
-    }, [salary, currency, dollarRate, expenses, calculate]);
+    }, [salary, currency, dollarRate, expenses, nonSalaryIncome, calculate]);
 
     function handleCurrencyChange(newCurrency: Currency) {
         setCurrency(newCurrency);
@@ -134,6 +136,11 @@ function App() {
                     onSalaryChange={setSalary}
                     onCurrencyChange={handleCurrencyChange}
                     onRateChange={setDollarRate}
+                />
+
+                <NonSalaryIncomeManager
+                    items={nonSalaryIncome}
+                    onItemsChange={setNonSalaryIncome}
                 />
 
                 <ExpenseManager

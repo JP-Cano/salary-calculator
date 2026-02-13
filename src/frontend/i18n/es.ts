@@ -22,6 +22,14 @@ export const es: TranslationDictionary = {
     "salary.rate_cached": "Cache",
     "salary.rate_default": "Por defecto",
 
+    // Non-salary income
+    "income.title": "Ingresos No Salariales",
+    "income.empty": "No hay ingresos no salariales. Agrega bonificaciones u otros ingresos no gravables abajo.",
+    "income.name_placeholder": "Nombre del ingreso",
+    "income.value_placeholder": "Valor en COP",
+    "income.add": "+ Agregar",
+    "income.remove": "Eliminar",
+
     // Expenses
     "expenses.title": "Gastos Mensuales",
     "expenses.empty": "No hay gastos agregados. Agrega tus gastos mensuales abajo.",
@@ -32,13 +40,15 @@ export const es: TranslationDictionary = {
 
     // Results
     "results.title": "Resultados",
-    "results.gross": "Salario Bruto",
+    "results.total_income": "Ingreso Total",
+    "results.gross": "Salario Bruto (Gravable)",
+    "results.non_salary_income": "Ingresos No Salariales",
     "results.taxes": "Impuestos y Deducciones",
     "results.expenses": "Gastos Totales",
     "results.net": "Salario Neto",
     "results.show_details": "Ver detalles",
     "results.hide_details": "Ocultar detalles",
-    "results.of_gross": "del bruto",
+    "results.of_total": "del ingreso total",
     "results.health": "Salud (4%)",
     "results.pension": "Pension (4%)",
     "results.fsp": "FSP",
@@ -56,6 +66,7 @@ export const es: TranslationDictionary = {
     "chart.gross": "Bruto",
     "chart.taxes": "Impuestos",
     "chart.expenses": "Gastos",
+    "chart.non_salary": "No Salarial",
     "chart.net": "Neto",
 
     // Status

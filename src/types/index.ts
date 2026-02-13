@@ -17,12 +17,19 @@ export type Expense = {
     value: number;
 };
 
+/** A non-salary income item (bonificacion no salarial). Not subject to taxes. */
+export type NonSalaryIncome = {
+    name: string;
+    value: number;
+};
+
 /** Request body for POST /api/calculate. */
 export type CalculationRequest = {
     salary: number;
     currency: Currency;
     dollarRate: number;
     expenses: Expense[];
+    nonSalaryIncome: NonSalaryIncome[];
 };
 
 /** Breakdown of taxes returned by the calculation. */
@@ -40,10 +47,11 @@ export type DualCurrency = {
     usd: number;
 };
 
-/** Percentage breakdown of salary distribution. */
+/** Percentage breakdown of salary distribution (relative to total income). */
 export type SalaryPercentages = {
     taxes: number;
     expenses: number;
+    nonSalaryIncome: number;
     remaining: number;
 };
 
@@ -57,7 +65,12 @@ export type PeriodBreakdown = {
 
 /** Response body for POST /api/calculate. */
 export type CalculationResponse = {
+    totalIncome: DualCurrency;
     grossSalary: DualCurrency;
+    nonSalaryIncome: {
+        items: NonSalaryIncome[];
+        total: number;
+    };
     taxes: TaxBreakdown;
     expenses: {
         items: Expense[];

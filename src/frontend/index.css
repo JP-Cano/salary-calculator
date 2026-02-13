@@ -438,6 +438,14 @@ input:focus {
     border-left: 4px solid var(--danger-color);
 }
 
+.result-item.positive {
+    border-left: 4px solid var(--primary-color);
+}
+
+.income-value {
+    color: var(--primary-color) !important;
+}
+
 .result-item.highlight {
     background: linear-gradient(135deg, #f0f9ff, #dbeafe);
     border: 2px solid var(--primary-color);
@@ -620,6 +628,10 @@ input:focus {
 
 .expenses-bar {
     background: linear-gradient(to top, var(--warning-color), #fbbf24);
+}
+
+.non-salary-bar {
+    background: linear-gradient(to top, var(--primary-color), #818cf8);
 }
 
 .net-bar {

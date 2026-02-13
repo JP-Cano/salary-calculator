@@ -25,13 +25,31 @@ export function ResultsPanel({ result, currency }: ResultsPanelProps) {
 
     const periodData = result.periodBreakdown[selectedPeriod];
     const showUsd = currency === "USD";
+    const hasNonSalaryIncome = result.nonSalaryIncome.total > 0;
 
     return (
         <section className="card results-card" aria-labelledby="results-section">
             <h2 id="results-section">{t("results.title")}</h2>
 
             <div className="results-grid">
-                {/* Gross Salary */}
+                {/* Total Income (only shown when there is non-salary income) */}
+                {hasNonSalaryIncome && (
+                    <div className="result-item">
+                        <span className="result-label">{t("results.total_income")}</span>
+                        <div className="result-value">
+                            <span className="primary-value">
+                                {formatCOP(result.totalIncome.cop)}
+                            </span>
+                            {showUsd && (
+                                <span className="secondary-value">
+                                    {formatUSD(result.totalIncome.usd)}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* Gross Salary (Taxable) */}
                 <div className="result-item">
                     <span className="result-label">{t("results.gross")}</span>
                     <div className="result-value">
@@ -45,6 +63,21 @@ export function ResultsPanel({ result, currency }: ResultsPanelProps) {
                         )}
                     </div>
                 </div>
+
+                {/* Non-Salary Income (only shown when there is non-salary income) */}
+                {hasNonSalaryIncome && (
+                    <div className="result-item positive">
+                        <span className="result-label">{t("results.non_salary_income")}</span>
+                        <div className="result-value">
+                            <span className="primary-value">
+                                {formatCOP(result.nonSalaryIncome.total)}
+                            </span>
+                            <span className="secondary-value">
+                                {formatPercent(result.percentages.nonSalaryIncome)}
+                            </span>
+                        </div>
+                    </div>
+                )}
 
                 {/* Taxes */}
                 <div className="result-item negative">
@@ -139,16 +172,17 @@ export function ResultsPanel({ result, currency }: ResultsPanelProps) {
                         )}
                     </div>
                     <span className="percentage-badge">
-                        {formatPercent(result.percentages.remaining)} {t("results.of_gross")}
+                        {formatPercent(result.percentages.remaining)} {t("results.of_total")}
                     </span>
                 </div>
             </div>
 
             <SalaryChart
                 percentages={result.percentages}
-                grossCop={result.grossSalary.cop}
+                totalIncomeCop={result.totalIncome.cop}
                 taxesCop={result.taxes.total}
                 expensesCop={result.expenses.total}
+                nonSalaryIncomeCop={result.nonSalaryIncome.total}
                 netCop={result.netSalary.cop}
             />
         </section>

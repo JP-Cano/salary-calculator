@@ -20,6 +20,14 @@ export const en = {
     "salary.rate_cached": "Cached",
     "salary.rate_default": "Default",
 
+    // Non-salary income
+    "income.title": "Non-Salary Income",
+    "income.empty": "No non-salary income added. Add bonuses or other non-taxable income below.",
+    "income.name_placeholder": "Income name",
+    "income.value_placeholder": "Value in COP",
+    "income.add": "+ Add",
+    "income.remove": "Remove",
+
     // Expenses
     "expenses.title": "Monthly Expenses",
     "expenses.empty": "No expenses added yet. Add your monthly expenses below.",
@@ -30,13 +38,15 @@ export const en = {
 
     // Results
     "results.title": "Results",
-    "results.gross": "Gross Salary",
+    "results.total_income": "Total Income",
+    "results.gross": "Gross Salary (Taxable)",
+    "results.non_salary_income": "Non-Salary Income",
     "results.taxes": "Taxes & Deductions",
     "results.expenses": "Total Expenses",
     "results.net": "Net Salary",
     "results.show_details": "Show details",
     "results.hide_details": "Hide details",
-    "results.of_gross": "of gross",
+    "results.of_total": "of total income",
     "results.health": "Health (4%)",
     "results.pension": "Pension (4%)",
     "results.fsp": "FSP",
@@ -54,6 +64,7 @@ export const en = {
     "chart.gross": "Gross",
     "chart.taxes": "Taxes",
     "chart.expenses": "Expenses",
+    "chart.non_salary": "Non-Salary",
     "chart.net": "Net",
 
     // Status
