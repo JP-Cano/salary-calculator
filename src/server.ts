@@ -74,10 +74,10 @@ const server = Bun.serve({
     fetch(req) {
         return api.handle(req);
     },
-    development: {
+    development: process.env.NODE_ENV !== "production" ? {
         hmr: true,
         console: true,
-    },
+    } : false,
 });
 
 console.log(
