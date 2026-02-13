@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import type { NonSalaryIncome } from "../../types/index.ts";
-import { formatCOP, formatNumericInput, parseFormattedNumber } from "../utils/formatters.ts";
+import type { NonSalaryIncome, Currency } from "../../types/index.ts";
+import { formatCOP, formatUSD, formatNumericInput, parseFormattedNumber } from "../utils/formatters.ts";
 import { useTranslation } from "../i18n/index.ts";
 
 type NonSalaryIncomeManagerProps = {
@@ -12,6 +12,7 @@ export function NonSalaryIncomeManager({ items, onItemsChange }: NonSalaryIncome
     const { t } = useTranslation();
     const [newName, setNewName] = useState("");
     const [newValue, setNewValue] = useState("");
+    const [newCurrency, setNewCurrency] = useState<Currency>("COP");
 
     function addItem() {
         const name = newName.trim();
@@ -19,7 +20,7 @@ export function NonSalaryIncomeManager({ items, onItemsChange }: NonSalaryIncome
 
         if (!name || !value || value <= 0) return;
 
-        onItemsChange([...items, { name, value }]);
+        onItemsChange([...items, { name, value, currency: newCurrency }]);
         setNewName("");
         setNewValue("");
     }
@@ -40,6 +41,10 @@ export function NonSalaryIncomeManager({ items, onItemsChange }: NonSalaryIncome
         setNewValue(formatted);
     }
 
+    function formatItemValue(item: NonSalaryIncome): string {
+        return item.currency === "USD" ? formatUSD(item.value) : formatCOP(item.value);
+    }
+
     return (
         <section className="card" aria-labelledby="income-section">
             <h2 id="income-section">{t("income.title")}</h2>
@@ -54,7 +59,9 @@ export function NonSalaryIncomeManager({ items, onItemsChange }: NonSalaryIncome
                         <div key={`${item.name}-${index}`} className="expense-item income-item">
                             <div className="expense-info">
                                 <div className="expense-name">{item.name}</div>
-                                <div className="expense-value income-value">{formatCOP(item.value)}</div>
+                                <div className="expense-value income-value">
+                                    {formatItemValue(item)} {item.currency}
+                                </div>
                             </div>
                             <button
                                 type="button"
@@ -69,7 +76,7 @@ export function NonSalaryIncomeManager({ items, onItemsChange }: NonSalaryIncome
                 )}
             </div>
 
-            <div className="add-expense-form">
+            <div className="add-income-form">
                 <input
                     type="text"
                     placeholder={t("income.name_placeholder")}
@@ -78,15 +85,37 @@ export function NonSalaryIncomeManager({ items, onItemsChange }: NonSalaryIncome
                     onKeyDown={handleKeyDown}
                     aria-label={t("income.name_placeholder")}
                 />
-                <input
-                    type="text"
-                    inputMode="numeric"
-                    placeholder={t("income.value_placeholder")}
-                    value={newValue}
-                    onChange={handleValueChange}
-                    onKeyDown={handleKeyDown}
-                    aria-label={t("income.value_placeholder")}
-                />
+                <div className="income-value-row">
+                    <div className="income-currency-toggle" role="radiogroup" aria-label={t("income.currency_label")}>
+                        <button
+                            type="button"
+                            role="radio"
+                            aria-checked={newCurrency === "COP"}
+                            className={`income-currency-option ${newCurrency === "COP" ? "active" : ""}`}
+                            onClick={() => { setNewCurrency("COP"); setNewValue(""); }}
+                        >
+                            COP
+                        </button>
+                        <button
+                            type="button"
+                            role="radio"
+                            aria-checked={newCurrency === "USD"}
+                            className={`income-currency-option ${newCurrency === "USD" ? "active" : ""}`}
+                            onClick={() => { setNewCurrency("USD"); setNewValue(""); }}
+                        >
+                            USD
+                        </button>
+                    </div>
+                    <input
+                        type="text"
+                        inputMode="numeric"
+                        placeholder={newCurrency === "COP" ? t("income.value_placeholder_cop") : t("income.value_placeholder_usd")}
+                        value={newValue}
+                        onChange={handleValueChange}
+                        onKeyDown={handleKeyDown}
+                        aria-label={t("income.value_placeholder_cop")}
+                    />
+                </div>
                 <button
                     type="button"
                     className="btn btn-secondary"

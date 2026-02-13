@@ -21,6 +21,7 @@ export type Expense = {
 export type NonSalaryIncome = {
     name: string;
     value: number;
+    currency: Currency;
 };
 
 /** Request body for POST /api/calculate. */

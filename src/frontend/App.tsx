@@ -89,12 +89,16 @@ function App() {
     useEffect(() => {
         if (salary <= 0) return;
 
+        // Always pass the best available dollar rate so USD non-salary income
+        // items can be converted even when the main salary is in COP
+        const effectiveRate = currency === "USD" ? dollarRate : (rate ?? 0);
+
         if (currency === "COP") {
-            calculate({ salary, currency, dollarRate: 0, expenses, nonSalaryIncome });
+            calculate({ salary, currency, dollarRate: effectiveRate, expenses, nonSalaryIncome });
         } else if (dollarRate > 0) {
             calculate({ salary, currency, dollarRate, expenses, nonSalaryIncome });
         }
-    }, [salary, currency, dollarRate, expenses, nonSalaryIncome, calculate]);
+    }, [salary, currency, dollarRate, rate, expenses, nonSalaryIncome, calculate]);
 
     function handleCurrencyChange(newCurrency: Currency) {
         setCurrency(newCurrency);

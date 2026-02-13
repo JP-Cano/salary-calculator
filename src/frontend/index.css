@@ -398,6 +398,72 @@ input:focus {
     white-space: nowrap;
 }
 
+/* Add Income Form */
+.add-income-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    align-items: stretch;
+}
+
+.add-income-form input {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.95rem;
+}
+
+.add-income-form .btn {
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.income-value-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.income-value-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+.income-currency-toggle {
+    display: flex;
+    flex-shrink: 0;
+    background: var(--bg-color);
+    border-radius: 6px;
+    padding: 2px;
+    border: 1px solid var(--border-color);
+    align-self: center;
+}
+
+.income-currency-option {
+    padding: 0.35rem 0.6rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all var(--transition);
+    background: transparent;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+}
+
+.income-currency-option.active {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.income-currency-option:not(.active):hover {
+    color: var(--text-primary);
+    background: var(--border-color);
+}
+
 /* ============================================
    Loading Indicator
    ============================================ */
@@ -813,7 +879,8 @@ footer {
 }
 
 @media (max-width: 480px) {
-    .add-expense-form {
+    .add-expense-form,
+    .add-income-form {
         grid-template-columns: 1fr;
     }
 

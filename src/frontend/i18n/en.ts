@@ -24,7 +24,9 @@ export const en = {
     "income.title": "Non-Salary Income",
     "income.empty": "No non-salary income added. Add bonuses or other non-taxable income below.",
     "income.name_placeholder": "Income name",
-    "income.value_placeholder": "Value in COP",
+    "income.value_placeholder_cop": "Value in COP",
+    "income.value_placeholder_usd": "Value in USD",
+    "income.currency_label": "Income currency",
     "income.add": "+ Add",
     "income.remove": "Remove",
 

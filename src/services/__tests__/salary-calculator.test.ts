@@ -33,12 +33,12 @@ describe("Salary Calculator Service", () => {
         });
     });
 
-    describe("with non-salary income", () => {
+    describe("with COP non-salary income", () => {
         const requestWithBonus: CalculationRequest = {
             ...baseRequest,
             nonSalaryIncome: [
-                { name: "Bonus", value: 1_000_000 },
-                { name: "Transport allowance", value: 500_000 },
+                { name: "Bonus", value: 1_000_000, currency: "COP" },
+                { name: "Transport allowance", value: 500_000, currency: "COP" },
             ],
         };
 
@@ -81,8 +81,6 @@ describe("Salary Calculator Service", () => {
         test("taxes + expenses + remaining sum to 100%", () => {
             const result = calculateSalary(requestWithBonus);
 
-            // nonSalaryIncome % is informational (portion of total that is non-taxable)
-            // It's already included in `remaining`, so only taxes + expenses + remaining = 100%
             const totalPercent =
                 result.percentages.taxes +
                 result.percentages.expenses +
@@ -94,12 +92,81 @@ describe("Salary Calculator Service", () => {
         test("percentages are relative to total income, not gross salary", () => {
             const result = calculateSalary(requestWithBonus);
 
-            // Total income is 5M + 1.5M = 6.5M
-            // Non-salary percentage should be ~23.08% (1.5M / 6.5M)
             expect(result.percentages.nonSalaryIncome).toBeCloseTo(
                 (1_500_000 / 6_500_000) * 100,
                 1,
             );
+        });
+    });
+
+    describe("with USD non-salary income", () => {
+        const dollarRate = 4_000;
+        const requestWithUsdBonus: CalculationRequest = {
+            ...baseRequest,
+            dollarRate,
+            nonSalaryIncome: [
+                { name: "USD Bonus", value: 500, currency: "USD" },
+            ],
+        };
+
+        test("USD items are converted to COP using the dollar rate", () => {
+            const result = calculateSalary(requestWithUsdBonus);
+
+            // 500 USD * 4000 = 2,000,000 COP
+            expect(result.nonSalaryIncome.total).toBe(2_000_000);
+        });
+
+        test("USD non-salary income does NOT affect taxes", () => {
+            const withoutBonus = calculateSalary(baseRequest);
+            const withBonus = calculateSalary(requestWithUsdBonus);
+
+            expect(withBonus.taxes.total).toBe(withoutBonus.taxes.total);
+        });
+
+        test("USD non-salary income is added to net salary in COP", () => {
+            const withoutBonus = calculateSalary(baseRequest);
+            const withBonus = calculateSalary(requestWithUsdBonus);
+
+            expect(withBonus.netSalary.cop).toBe(withoutBonus.netSalary.cop + 2_000_000);
+        });
+    });
+
+    describe("with mixed currency non-salary income", () => {
+        const dollarRate = 4_000;
+        const requestMixed: CalculationRequest = {
+            ...baseRequest,
+            dollarRate,
+            nonSalaryIncome: [
+                { name: "COP Bonus", value: 1_000_000, currency: "COP" },
+                { name: "USD Bonus", value: 250, currency: "USD" },
+            ],
+        };
+
+        test("mixed COP and USD items are correctly summed in COP", () => {
+            const result = calculateSalary(requestMixed);
+
+            // 1,000,000 COP + (250 USD * 4000) = 1,000,000 + 1,000,000 = 2,000,000
+            expect(result.nonSalaryIncome.total).toBe(2_000_000);
+        });
+
+        test("total income reflects both COP and converted USD items", () => {
+            const result = calculateSalary(requestMixed);
+
+            expect(result.totalIncome.cop).toBe(5_000_000 + 2_000_000);
+        });
+
+        test("taxes remain unchanged with mixed currency income", () => {
+            const withoutBonus = calculateSalary(baseRequest);
+            const withMixed = calculateSalary(requestMixed);
+
+            expect(withMixed.taxes.total).toBe(withoutBonus.taxes.total);
+        });
+
+        test("net salary includes all non-salary income converted to COP", () => {
+            const withoutBonus = calculateSalary(baseRequest);
+            const withMixed = calculateSalary(requestMixed);
+
+            expect(withMixed.netSalary.cop).toBe(withoutBonus.netSalary.cop + 2_000_000);
         });
     });
 
@@ -108,7 +175,7 @@ describe("Salary Calculator Service", () => {
             const request: CalculationRequest = {
                 ...baseRequest,
                 expenses: [{ name: "Rent", value: 1_000_000 }],
-                nonSalaryIncome: [{ name: "Bonus", value: 2_000_000 }],
+                nonSalaryIncome: [{ name: "Bonus", value: 2_000_000, currency: "COP" }],
             };
 
             const noExtras = calculateSalary(baseRequest);

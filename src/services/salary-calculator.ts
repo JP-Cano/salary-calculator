@@ -25,7 +25,11 @@ export function calculateSalary(request: CalculationRequest): CalculationRespons
     const totalExpenses = expenses.total;
 
     // Non-salary income is added to net (not subject to taxes)
-    const totalNonSalaryIncome = nonSalaryItems.reduce((sum, item) => sum + item.value, 0);
+    // Items in USD are converted to COP using the same dollar rate
+    const totalNonSalaryIncome = nonSalaryItems.reduce((sum, item) => {
+        const copValue = item.currency === "USD" ? item.value * salary.dollarRate : item.value;
+        return sum + copValue;
+    }, 0);
 
     const netSalary = salary.calculateNetSalary(totalExpenses, totalTaxes) + totalNonSalaryIncome;
     const totalIncomeCop = copSalary + totalNonSalaryIncome;

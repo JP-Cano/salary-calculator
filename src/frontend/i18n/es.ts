@@ -26,7 +26,9 @@ export const es: TranslationDictionary = {
     "income.title": "Ingresos No Salariales",
     "income.empty": "No hay ingresos no salariales. Agrega bonificaciones u otros ingresos no gravables abajo.",
     "income.name_placeholder": "Nombre del ingreso",
-    "income.value_placeholder": "Valor en COP",
+    "income.value_placeholder_cop": "Valor en COP",
+    "income.value_placeholder_usd": "Valor en USD",
+    "income.currency_label": "Moneda del ingreso",
     "income.add": "+ Agregar",
     "income.remove": "Eliminar",
 
